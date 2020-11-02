@@ -1,0 +1,103 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+
+<div class="big-wrapper">
+
+    <div class="form-title-wrapper">
+
+        <div class="form-title">{% trans "Sign In To QuestionTime" %}</div>
+    </div>
+    {% get_providers as socialaccount_providers %}
+
+
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <div class="form-wrapper ">
+            {% csrf_token %}
+
+            <span class="form-validation-error"> {{ form.non_field_errors }}</span>
+            <div class="group ">
+                {{form.login}}
+                <span class="from-validation-error">{{form.login.errors}}</span>
+
+
+
+            </div>
+            <div class="group ">
+                {{form.password}}
+                <span class="from-validation-error">{{form.password.errors}}</span>
+
+
+
+
+            </div>
+            <div class="remember-btn">
+
+                <span class="checkbox-btn">{{form.remember}}</span>
+                <label for="id_remember"> Remember Me </label>
+
+
+                {{form.remember.errors}}
+
+            </div>
+
+
+
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <div class="d-flex flex-column justify-content-between align-items-center">
+                <button class="primaryAction submit-btn" type="submit">{% trans "SIGN IN" %}</button>
+                <a class="forget-btn secondaryAction"
+                    href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
+            </div>
+        </div>
+    </form>
+
+
+    <div class="signup-wrapper">
+
+
+
+
+        {% if socialaccount_providers %}
+        <p>{% blocktrans with site.name as site_name %}Please sign in with one
+            of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+            for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+        <div class="socialaccount_ballot">
+
+            <ul class="socialaccount_providers">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+
+            <div class="login-or">{% trans 'or' %}</div>
+
+        </div>
+
+        {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+        <p>{% blocktrans %}If you have not created an account yet, then please
+            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+
+
+{% endblock %}
